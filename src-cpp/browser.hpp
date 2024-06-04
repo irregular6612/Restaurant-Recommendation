@@ -10,14 +10,15 @@ public:
     virtual std::string getName() const = 0;
 };
 
+template <typename T>
 class MenuItem: public Command{
 private:
     std::string name;
-    std::function<bool(AccountManager*)> action;
+    T* action;
 public:
-    MenuItem(const std::string& name, std::function<bool(AccountManager*)> action): name(name), action(action){}
+    MenuItem(const std::string& name, T* action): name(name), action(action){}
     bool execute(AccountManager* userlist) override{
-        return action(userlist);
+        return action -> action(userlist);
     };
 
     std::string getName() const override{
