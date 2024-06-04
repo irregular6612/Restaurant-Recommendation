@@ -1,0 +1,2 @@
+ADMIN	admin	admin
+USER	user	user
