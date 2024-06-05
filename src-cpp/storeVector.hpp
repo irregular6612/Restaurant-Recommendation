@@ -2,13 +2,17 @@
 #define STOREVECTOR_H
 
 #include <string>
-#include<vector>
+#include <vector>
 
 class menu{
 public:
     virtual std::string getMenuName() const = 0;
     virtual std::string getMenuPrice() const = 0;
     virtual int getMenuPriceValue() const = 0;
+
+    virtual void setMenuName(std::string) = 0;
+    virtual void setMenuPrice(std::string) = 0;
+    virtual void setMenuPriceValue(int) = 0;
 };
 
 class restaurantMenu : public menu{
@@ -22,6 +26,11 @@ public:
     std::string getMenuName() const override{ return menuName; }
     std::string getMenuPrice() const override{ return menuPrice; }
     int getMenuPriceValue() const override{ return menuPriceVal; }
+
+    void setMenuName(std::string menuName) override{ this -> menuName = menuName; }
+    void setMenuPrice(std::string menuPrice) override{ this -> menuPrice = menuPrice; }
+    void setMenuPriceValue(int menuPriceVal) override{this -> menuPriceVal = menuPriceVal; }
+
     void formatPrice(){
         int indexOfComma = menuPrice.find(',');
         try{
@@ -109,7 +118,7 @@ public:
         }
         return storeHasMenu;
     }
-    std::vector<menu*> allMenu()const{ return menus; }
+    std::vector<menu*> allMenu() const{ return menus; }
     //영업점의 영업 상태는 "영업 중, 영업 전, 영업 종료, BLANK, 24시간 영업"
     void addMenu(menu* _menu){ menus.push_back(_menu); }
 };
@@ -171,18 +180,20 @@ public:
         }
         return targetStore;
     }
-    menuVector* findStore2Name(std::string storeName){
+    std::vector<menuVector*> findStore2Name(std::string storeName){
         //cant const since below line.
+        std::vector<menuVector*> targetStore;
         storeInput = storeName;
         for(menuVector* _store : stores){
             if(!(_store -> getName().compare(storeName))){
-                return _store;
+                targetStore.push_back(_store);
             }
         }
-        return nullptr;
+        return targetStore;
+        
     }
     void insertStore(menuVector* s){
-        if(findStore2Name(s -> getName()) == nullptr){
+        if(findStore2Name(s -> getName()).empty()){
             stores.push_back(s);
         }
     }

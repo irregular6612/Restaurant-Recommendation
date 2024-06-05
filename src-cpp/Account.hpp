@@ -12,6 +12,7 @@ public:
 	Account(AccountType accountType, std::string id, std::string pw) :accountType(accountType), id(id), pw(pw) {};
 	void setId(std::string id) { this->id = id; }
 	std::string getId() const{ return id; }
+    void setPw(std::string pw) { this->pw = pw; }
 	std::string getPw() const{ return pw; }
 	AccountType getAccountType() const{ return accountType; }
 private:
@@ -35,7 +36,7 @@ public:
             //if(item -> getId().compare(it -> getId()) && item -> getPw().compare(*it -> getPw()))
         }
     }
-    void size(){ std::cout << "Account : " << AccountList.size() << std::endl;}
+    int size(){ std::cout << "Account : " << AccountList.size() << std::endl; return AccountList.size(); }
     Account* find(std::string id, std::string pw){
         for(Account* item: AccountList){
             if(!(item->getId().compare(id)) && !(item -> getPw().compare(pw))){

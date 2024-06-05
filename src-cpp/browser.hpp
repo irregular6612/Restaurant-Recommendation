@@ -6,19 +6,19 @@
 class Command{
 private:
 public:
-    virtual bool execute(AccountManager*) = 0;
+    virtual bool execute() = 0;
     virtual std::string getName() const = 0;
 };
 
-template <typename T>
-class MenuItem: public Command{
+template <typename T>//템플릿에서 추상으로 
+class MenuItem: public Command{ //conrete command
 private:
     std::string name;
     T* action;
 public:
     MenuItem(const std::string& name, T* action): name(name), action(action){}
-    bool execute(AccountManager* userlist) override{
-        return action -> action(userlist);
+    bool execute() override{
+        return action -> action();
     };
 
     std::string getName() const override{
@@ -33,7 +33,7 @@ private:
 public:
     MenuPage(std::string name):name(name){};
     void addMenu(Command* item){ menulist.push_back(item); }
-    bool show(AccountManager* userlist){
+    bool show(){
         int selection = 0;
         do{
             system("clear");
@@ -46,7 +46,7 @@ public:
             std::cin >> selection;
             if(selection > 0 && menulist.size()){
                 system("clear");
-                if(menulist[selection -1] -> execute(userlist)){
+                if(menulist[selection -1] -> execute()){
                     return true;
                 }
             }
@@ -62,10 +62,10 @@ private:
     pageState curPage;
     std::vector<MenuPage*> pagehistory;
     std::vector<MenuPage*> pageTemplate;
-    AccountManager* userlist;
+    AccountManager& userlist;
     bool runstate;
 public:
-    pageControler(AccountManager* userlist):userlist(userlist), runstate(true), curPage(pageState::MAINPAGE){}
+    pageControler(AccountManager& userlist): userlist(userlist), runstate(true), curPage(pageState::MAINPAGE){}
     void addPage(MenuPage* page){
         pagehistory.push_back(page);
     }
@@ -74,14 +74,14 @@ public:
         //printPage();
     }
     bool isLogedIn(){
-        if(userlist->getAccount() != nullptr){ return true; }
+        if(userlist.getAccount() != nullptr){ return true; }
         else{ return false; }
     }
     void addPageTemplate(MenuPage* page){
         pageTemplate.push_back(page);
     }
     bool printPage(){
-        return (pagehistory.back() -> show(userlist));
+        return (pagehistory.back() -> show());
     }
     void run(){
         while (pagehistory.size()){

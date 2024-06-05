@@ -47,6 +47,7 @@ public:
             if(!std::getline(file, line)){
                 throw std::out_of_range("EOF");
             }
+    
             line_buffer.clear();
             line_buffer.str(line);
             //std::cout << "readline() called" << std::endl;
@@ -68,6 +69,16 @@ public:
     }
     void newLine(){ file << std::endl; }
     void writeToken(std::string content){ file << content; }
+    void moveFront(){ 
+        file.clear();
+        file.seekg(0, std::ios::beg);         
+    }
+    void clear(){
+        file.close();
+        std::string commandline = "cat /dev/null >" + filePath;
+        system(commandline.c_str());
+        file.open(filePath);
+    }
 };
 
 //access to last char to find specific delimeter
@@ -82,5 +93,6 @@ int findIndexBack(std::string _string, char delimeter, int start){
     start++;
     return start;
 }
+ 
 
 #endif
