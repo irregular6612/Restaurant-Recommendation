@@ -1,9 +1,9 @@
-#include<vector>
-#include<functional>
-#include"Account.hpp"
+#include <vector>
+#include <functional>
+#include "account.hpp"
 
 //command가 굳이 필요한가...?
-class Command{
+class Command {
 private:
 public:
     virtual bool execute() = 0;
@@ -11,87 +11,88 @@ public:
 };
 
 template <typename T>//템플릿에서 추상으로 
-class MenuItem: public Command{ //conrete command
+class FunctionalPage : public Command { //conrete command
 private:
-    std::string name;
+    std::string pageName;
     T* action;
 public:
-    MenuItem(const std::string& name, T* action): name(name), action(action){}
-    bool execute() override{
-        return action -> action();
+    FunctionalPage(const std::string& name, T* action) : pageName(name), action(action) {}
+    bool execute() override {
+        return action->action();
     };
 
-    std::string getName() const override{
-        return name;
+    std::string getName() const override {
+        return pageName;
     }
 };
 
-class MenuPage{
+class PrintOnlyPage {
 private:
-    std::vector<Command*> menulist;
-    std::string name;
+    std::vector<Command*> menuList;
+    std::string pageName;
 public:
-    MenuPage(std::string name):name(name){};
-    void addMenu(Command* item){ menulist.push_back(item); }
-    bool show(){
+    PrintOnlyPage(std::string name) :pageName(name) {};
+    void addMenu(Command* item) { menuList.push_back(item);  }
+    bool show() {
         int selection = 0;
-        do{
+        do {
             system("clear");
-            std::cout << "Menu:" << name << std::endl << std::endl;
-            for(int i=0; i< menulist.size();i++){
-                std::cout << i + 1 << ". " << menulist[i] -> getName() << std::endl;   
+            std::cout << "Menu:" << pageName << std::endl << std::endl;
+            for (int i = 0; i < menuList.size(); i++) {
+                std::cout << i + 1 << ". " << menuList[i]->getName() << std::endl;
             }
             std::cout << "0. exit" << std::endl << std::endl;
             std::cout << "Choose an option: ";
             std::cin >> selection;
-            if(selection > 0 && menulist.size()){
+            if (selection > 0 && menuList.size()) {
                 system("clear");
-                if(menulist[selection -1] -> execute()){
+                if (menuList[selection - 1]->execute()) {
                     return true;
                 }
             }
-        }while(selection != 0);
+        } while (selection != 0);
         return false;
     }
 };
 
-class pageControler{
+class PageController {
 private:
-    enum class pageState{ MAINPAGE, USERMAIN, CATEGORIESPAGE };
+    enum PageState { MAINPAGE, USERMAIN, CATEGORIESPAGE };
 
-    pageState curPage;
-    std::vector<MenuPage*> pagehistory;
-    std::vector<MenuPage*> pageTemplate;
-    AccountManager& userlist;
-    bool runstate;
+    PageState pageState;
+    std::vector<PrintOnlyPage*> pageHistory;
+    std::vector<PrintOnlyPage*> pageTemplate;
+    AccountStorage& accountStorage;
+    bool runState;
 public:
-    pageControler(AccountManager& userlist): userlist(userlist), runstate(true), curPage(pageState::MAINPAGE){}
-    void addPage(MenuPage* page){
-        pagehistory.push_back(page);
+    PageController(AccountStorage& accountStorage) : accountStorage(accountStorage), runState(true), pageState(MAINPAGE) {}
+    void addPage(PrintOnlyPage* page) {
+        pageHistory.push_back(page);
     }
-    void restorePage(){
-        pagehistory.pop_back();
+    void restorePage() {
+        pageHistory.pop_back();
         //printPage();
     }
-    bool isLogedIn(){
-        if(userlist.getAccount() != nullptr){ return true; }
-        else{ return false; }
+    bool isLoggedIn() {
+        if (accountStorage.getAccount() != nullptr) { return true; }
+        else { return false; }
     }
-    void addPageTemplate(MenuPage* page){
+    void addPageTemplate(PrintOnlyPage* page) {
         pageTemplate.push_back(page);
     }
-    bool printPage(){
-        return (pagehistory.back() -> show());
+    bool printPage() {
+        return (pageHistory.back()->show());
     }
-    void run(){
-        while (pagehistory.size()){
-            if(printPage() == false){
+    void run() {
+        while (pageHistory.size()) {
+            if (printPage() == false) {
                 restorePage();
                 //여기서 enum 때문에...
-                curPage = static_cast<pageState>(static_cast<int>(curPage) - 1);
-            }else{
-                addPage(pageTemplate[static_cast<int>(curPage) + 1]);
-                curPage = static_cast<pageState>(static_cast<int>(curPage) + 1);
+                pageState = static_cast<PageState>(static_cast<int>(pageState) - 1);
+            }
+            else {
+                addPage(pageTemplate[static_cast<int>(pageState) + 1]);
+                pageState = static_cast<PageState>(static_cast<int>(pageState) + 1);
             }
         }
     }

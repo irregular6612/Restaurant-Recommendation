@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-class menu{
+class Menu{
 public:
     virtual std::string getMenuName() const = 0;
     virtual std::string getMenuPrice() const = 0;
@@ -15,14 +15,14 @@ public:
     virtual void setMenuPriceValue(int) = 0;
 };
 
-class restaurantMenu : public menu{
+class RestaurantMenu : public Menu{
 private:
     std::string menuName;
     std::string menuPrice;
     int menuPriceVal;
 public:
-    restaurantMenu(std::string _name, std::string _price) : menuName(_name), menuPrice(_price){ formatPrice(); }
-    ~restaurantMenu(){}
+    RestaurantMenu(std::string _name, std::string _price) : menuName(_name), menuPrice(_price){ formatPrice(); }
+    ~RestaurantMenu(){}
     std::string getMenuName() const override{ return menuName; }
     std::string getMenuPrice() const override{ return menuPrice; }
     int getMenuPriceValue() const override{ return menuPriceVal; }
@@ -31,11 +31,12 @@ public:
     void setMenuPrice(std::string menuPrice) override{ this -> menuPrice = menuPrice; }
     void setMenuPriceValue(int menuPriceVal) override{this -> menuPriceVal = menuPriceVal; }
 
-    void formatPrice(){
+    void formatPrice() {
         int indexOfComma = menuPrice.find(',');
-        try{
-            menuPriceVal = std::stoi(menuPrice.substr(0,indexOfComma) + menuPrice.substr(indexOfComma+1));
-        }catch(const std::exception& e){
+        try {
+            menuPriceVal = std::stoi(menuPrice.substr(0, indexOfComma) + menuPrice.substr(indexOfComma + 1));
+        }
+        catch (const std::exception& e) {
             menuPriceVal = -1;
             //std::cerr << e.what() << '\n';
         }
@@ -43,157 +44,163 @@ public:
 };
 //----------------------------------------------------------------------------------------------------
 
-enum storeCategory{ KOREAN, CHINESE, JAPANESE, CAFE, ITALIAN, WESTERN, FASTFOOD, BOONSIK, ETC };
+enum StoreCategory { KOREAN, CHINESE, JAPANESE, CAFE, ITALIAN, WESTERN, FASTFOOD, BOONSIK, ETC };
 
-class menuVector{
+class MenuVector {
 public:
     virtual std::string getName() const = 0;
+    virtual void setName(std::string) = 0;
     virtual std::string getTel() const = 0;
+    virtual void setTel(std::string newTel) = 0;
     virtual std::string getCategory() const = 0;
+    virtual void setCatergory(std::string newCategory) = 0;
     virtual std::string getReview() const = 0;
+    virtual void setReview(std::string review) = 0;
     virtual int getReviewVal() const = 0;
     virtual bool hasMenu(std::string menuQuery) const = 0;
-    virtual menu* getMenu(int index) const = 0;
-    virtual menu* getMenu(std::string menuQuery) const = 0;
-    virtual std::vector<menu*> allMenu()const = 0;
-    virtual void addMenu(menu* _menu) = 0;
+    virtual Menu* getMenu(int index) const = 0;
+    virtual Menu* getMenu(std::string menuQuery) const = 0;
+    virtual std::vector<Menu*> allMenu()const = 0;
+    virtual void addMenu(Menu* menu) = 0;
 };
 
-class store: public menuVector{
+class Store : public MenuVector {
 private:
-    std::string name;
-    std::vector<menu*> menus;    
-    std::string tel;
-    std::string category;
-    std::string reviewCount;
-    int reviewVal;
+    std::string storeName;
+    std::vector<Menu*> storeMenus;
+    std::string storeTel;
+    std::string storeCategory;
+    std::string storeReviewCount;
+    int storeReviewVal;
 public:
-    store(std::string _name) : name(_name){}
-    ~store(){}
-    void setName(std::string _new){ name = _new; }
-    std::string getName() const override{ return name; }
-    void setTel(std::string _new){ tel = _new; }
-    std::string getTel() const override{ return tel; }
-    void setCatergory(std::string _new){ category = _new; }
-    std::string getCategory() const override{ return category; }
-    void setReview(std::string _review){ reviewCount = _review; formatReview(); } 
-    std::string getReview() const override{ return reviewCount; }
-    void formatReview(){
-        try{
-            reviewVal= std::stoi(reviewCount);
-        }catch(const std::exception& e){
-            reviewVal = 0;
+    Store(std::string name) : storeName(name) {}
+    ~Store() {}
+    void setName(std::string newName) override{ storeName = newName; }
+    std::string getName() const override { return storeName; }
+    void setTel(std::string newTel) override { storeTel = newTel; }
+    std::string getTel() const override { return storeTel; }
+    void setCatergory(std::string newCategory) override { storeCategory = newCategory; }
+    std::string getCategory() const override { return storeCategory; }
+    void setReview(std::string review) override { storeReviewCount = review; formatReview(); }
+    std::string getReview() const override { return storeReviewCount; }
+    void formatReview() {
+        try {
+            storeReviewVal= std::stoi(storeReviewCount);
+        }
+        catch (const std::exception& e) {
+            storeReviewVal = 0;
             //std::cerr << e.what() << '\n'; -> no reivew count.
         }
     }
-    int getReviewVal() const override{ return reviewVal; }
+    int getReviewVal() const override { return storeReviewVal; }
     //function overloading
-    menu* getMenu(int index) const override{ return menus[index]; }
-    menu* getMenu(std::string menuQuery) const override{
-        for(menu* _menu : menus){
-            if(_menu -> getMenuName().find(menuQuery) != std::string::npos){
-                return _menu;
+    Menu* getMenu(int index) const override { return storeMenus[index]; }
+    Menu* getMenu(std::string menuQuery) const override {
+        for (Menu* menu : storeMenus) {
+            if (menu->getMenuName().find(menuQuery) != std::string::npos) {
+                return menu;
             }
         }
         return nullptr;
     }
     
-    int menuNum() const{ return menus.size(); }
-    std::vector<menu*> findAllMenu(std::string menuQuery) const{
-        std::vector<menu*> targetMenu;
-        for(menu* _menu : menus){
-            if(_menu -> getMenuName().find(menuQuery) != std::string::npos){
-                targetMenu.push_back(_menu);
+    int menuNum() const { return storeMenus.size(); }
+    std::vector<Menu*> findAllMenu(std::string menuQuery) const {
+        std::vector<Menu*> targetMenu;
+        for (Menu* menu : storeMenus) {
+            if (menu->getMenuName().find(menuQuery) != std::string::npos) {
+                targetMenu.push_back(menu);
             }
         }
         return targetMenu;
     }
-    bool hasMenu(std::string menuQuery) const override{
+    bool hasMenu(std::string menuQuery) const override {
         bool storeHasMenu = false;
-        for(menu* _menu : menus){
-            if(_menu -> getMenuName().find(menuQuery) != std::string::npos){
+        for (Menu* menu : storeMenus) {
+            if (menu->getMenuName().find(menuQuery) != std::string::npos) {
                 storeHasMenu = true;
                 break;
             }
         }
         return storeHasMenu;
     }
-    std::vector<menu*> allMenu() const{ return menus; }
+    std::vector<Menu*> allMenu() const override { return storeMenus; }
     //영업점의 영업 상태는 "영업 중, 영업 전, 영업 종료, BLANK, 24시간 영업"
-    void addMenu(menu* _menu){ menus.push_back(_menu); }
+    void addMenu(Menu* menu) override { storeMenus.push_back(menu); }
 };
 
 //-------------------------------------------------------------------------------------------------
 
-class storeVector{
+class StoreVector {
 private:
-    enum order{ DEFAULT, PRICE, STARS};
-    order sortStd;
+    enum SortStd { DEFAULT, PRICE, STARS };
+    SortStd sortStd;
     std::string menuInput;
     std::string storeInput;
-    std::vector<menuVector*> stores;
-    bool compareDefault(menuVector* a, menuVector* b){ return true; }
-    bool comparePrice(menuVector* a, menuVector* b){
-        return (a -> getMenu(menuInput) -> getMenuPriceValue()) >= ( b -> getMenu(menuInput) -> getMenuPriceValue()) ? true : false;
+    std::vector<MenuVector*> stores;
+    bool compareDefault(MenuVector* a, MenuVector* b) { return true; }
+    bool comparePrice(MenuVector* a, MenuVector* b) {
+        return (a->getMenu(menuInput)->getMenuPriceValue()) >= (b->getMenu(menuInput)->getMenuPriceValue()) ? true : false;
     }
-    bool compareReview(menuVector* a, menuVector* b){
-        return (a -> getReviewVal()) >= ( b -> getReviewVal()) ? true : false;
+    bool compareReview(MenuVector* a, MenuVector* b) {
+        return (a->getReviewVal()) >= (b->getReviewVal()) ? true : false;
     }
 public:
-    storeVector(): sortStd(DEFAULT){}
-    ~storeVector(){}
-    void setOrder(int x){ sortStd = static_cast<order>(x); }
-    int getOrder() const{ return static_cast<int>(sortStd); }
+    StoreVector() : sortStd(DEFAULT) {}
+    ~StoreVector() {}
+    void setOrder(int x) { sortStd = static_cast<SortStd>(x); }
+    int getOrder() const { return static_cast<int>(sortStd); }
 
 
-    std::vector<menuVector*> findStore2Menu(std::string menuQuery, int x= 0){
-        
-        setOrder(static_cast<order>(x));
+    std::vector<MenuVector*> findStoreWithMenu(std::string menuQuery, int x = 0) {
+        setOrder(static_cast<SortStd>(x));
         //cant const since below line.
         menuInput = menuQuery;
-        std::vector<menuVector*> targetStore;
+        std::vector<MenuVector*> targetStore;
 
-        for(menuVector* _store : stores){
-            if(_store -> hasMenu(menuQuery)){
+        for (MenuVector* store : stores) {
+            if (store->hasMenu(menuQuery)) {
                 //
-                if(sortStd == DEFAULT || targetStore.size() == 0){
-                    targetStore.push_back(_store);
+                if (sortStd == DEFAULT || targetStore.size() == 0) {
+                    targetStore.push_back(store);
                 //가격 정렬 수정 필요.......................................................................
                 //가격이 싼게 앞으로 -> idx가 증가하는데, 언제까지? -> 
-                }else if(sortStd == PRICE){
-                    for(int i=0;i != targetStore.size();i++){
-                        if((_store -> getMenu(menuQuery) -> getMenuPriceValue()) < (targetStore[i] -> getMenu(menuQuery) -> getMenuPriceValue())){
-                            targetStore.insert(targetStore.begin()+i, _store);
-                            break;
-                        }
-                    }
-                }else{  //sort order with review count.
-                    for(int i=0; i != targetStore.size();i++){
-                        if(_store -> getReviewVal() > targetStore[i] -> getReviewVal()){
-                            targetStore.insert(targetStore.begin()+i,_store);
+                }
+                else if (sortStd == PRICE) {
+                    for (int i = 0; i != targetStore.size(); i++) {
+                        if ((store->getMenu(menuQuery)->getMenuPriceValue()) < (targetStore[i]->getMenu(menuQuery)->getMenuPriceValue())) {
+                            targetStore.insert(targetStore.begin() + i, store);
                             break;
                         }
                     }
                 }
-                //targetStore.push_back(_store);
+                else {  //sort order with review count.
+                    for (int i = 0; i != targetStore.size(); i++) {
+                        if (store->getReviewVal() > targetStore[i]->getReviewVal()) {
+                            targetStore.insert(targetStore.begin() + i, store);
+                            break;
+                        }
+                    }
+                }
+                //targetStore.push_back(store);
             }
         }
         return targetStore;
     }
-    std::vector<menuVector*> findStore2Name(std::string storeName){
+    std::vector<MenuVector*> findStoreWithName(std::string storeName) {
         //cant const since below line.
-        std::vector<menuVector*> targetStore;
+        std::vector<MenuVector*> targetStore;
         storeInput = storeName;
-        for(menuVector* _store : stores){
-            if(!(_store -> getName().compare(storeName))){
-                targetStore.push_back(_store);
+        for (MenuVector* store : stores) {
+            if (store->getName().find(storeName) != std::string::npos) {
+                targetStore.push_back(store);
             }
         }
         return targetStore;
         
     }
-    void insertStore(menuVector* s){
-        if(findStore2Name(s -> getName()).empty()){
+    void insertStore(MenuVector* s) {
+        if (findStoreWithName(s->getName()).empty()) {
             stores.push_back(s);
         }
     }

@@ -3,6 +3,7 @@
 #include<memory>
 #include<iomanip>
 #include<vector>
+#include<fstream>
 
 class stringK{
 public:
@@ -44,17 +45,23 @@ public:
 
 
 int main(){
-    std::vector<nameId*> a;
-    nameId* a1 = new nameId(1);
-    nameId* a2 = new nameId(2);
-    a.push_back(a1);
-    a.push_back(a2);
+    std::string a;
+    std::stringstream ss;
+    std::fstream file;
+    file.open("dataset/temp.txt");
 
-    for(std::vector<nameId*>::iterator it;it != a.end();it++){
-        *it -> getId();
+    while (std::getline(file,a)){
+       ss << a;
+       
     }
     
-    
+    while (std::getline(ss,a)){
+       std::cout << a << std::endl;
+    }
+    return 0;
+}
+
+
 
     //size = 11, ㄱ,ㅗ,ㄱ,ㅜ,ㅁ,ㅏ,ㄴ,[ ]
     /*
@@ -81,10 +88,6 @@ int main(){
     std::cout <<std::setfill('*')<< std::setw(10+2*3) << _string << std::endl;
     std::cout <<std::setfill('*')<< std::setw(10) << "*" << std::endl;
     */
-    return 0;
-}
-
-
 
 /*
 //access to last char to find where the price info is start in idx

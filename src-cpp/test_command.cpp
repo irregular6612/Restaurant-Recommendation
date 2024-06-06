@@ -9,12 +9,12 @@ public:
 };
 
 template<typename T>
-class MenuItemCommand : public Command{
+classFunctionalPageCommand : public Command{
 private:
     std::string name;
     T action;
 public:
-    MenuItemCommand(const std::string& name, T& action): name(name), action(action){}
+   FunctionalPageCommand(const std::string& name, T& action): name(name), action(action){}
     void execute() override{ action.action(); }
     std::string getName() const override{ return name; }
 };
@@ -52,7 +52,7 @@ public:
 int main(){
     Menu menu;
     Receiver1 r;
-    MenuItemCommand Command1("Action1", r);
+   FunctionalPageCommand Command1("Action1", r);
     menu.addItem(&Command1);
     menu.show();
     return 0;

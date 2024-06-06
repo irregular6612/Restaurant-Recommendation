@@ -123,10 +123,10 @@ public:
 class MainPage :public Page {
 public:
 	MainPage() {
-		shared_ptr<SignUpPage*> signUpPage = make_shared<SignUpPage*>();
-		options.push_back(*signUpPage);
-		shared_ptr<SignInPage*> signInPage = make_shared<SignInPage*>();
-		options.push_back(*signInPage);
+		shared_ptr<signUpPage*> SignUpPage = make_shared<signUpPage*>();
+		options.push_back(*SignUpPage);
+		shared_ptr<signInPage*> SignInPage = make_shared<signInPage*>();
+		options.push_back(*SignInPage);
 	}
 	void print() override {
 		int input;
@@ -151,9 +151,9 @@ private:
 };
 
 
-class SignUpPage :public Page {
+class signUpPage :public Page {
 public:
-	SignUpPage() {
+	signUpPage() {
 		readAccountFile(accounts);
 		//shared_ptr<SignUp*> signUp = make_shared<SignUp*>(accounts);
 	}
@@ -198,9 +198,9 @@ private:
 	string name = "Sign Up Page";
 };
 
-class SignInPage :public Page {
+class signInPage :public Page {
 public:
-	SignInPage() {
+	signInPage() {
 		readAccountFile(accounts);
 		//shared_ptr<SignIn*> signIn = make_shared<SignIn*>(accounts);
 	}
@@ -247,9 +247,9 @@ private:
 class AdminMainPage :public Page {
 public:
 	AdminMainPage(Account* account) :account(account) {
-		shared_ptr<ModifyRestaurant*> modifyRestaurant = make_shared<ModifyRestaurant*>();
-		options.push_back(*modifyRestaurant);
-		shared_ptr<AccountInfoPage*> accouontInfoPage = make_shared<AccountInfoPage*>(account);
+		shared_ptr<modifyRestaurantPage*> ModifyRestaurantPage = make_shared<modifyRestaurantPage*>();
+		options.push_back(*ModifyRestaurantPage);
+		shared_ptr<accountInfoPage*> accouontInfoPage = make_shared<accountInfoPage*>(account);
 		options.push_back(*accouontInfoPage);
 	}
 	void print() override {
@@ -276,9 +276,9 @@ private:
 };
 
 //구현해야됨.
-class ModifyRestaurant :public Page {
+class modifyRestaurantPage :public Page {
 public:
-	ModifyRestaurant() {};
+	modifyRestaurantPage() {};
 	void print() override {
 		string input;
 		Store* targetRestaurant;
@@ -313,16 +313,16 @@ private:
 class UserMainPage :public Page {
 public:
 	UserMainPage(Account* account) :account(account) {
-		shared_ptr<SearchPage*> searchPage = make_shared<SearchPage*>();
-		options.push_back(*searchPage);
+		shared_ptr<searchPage*> SearchPage = make_shared<searchPage*>();
+		options.push_back(*SearchPage);
 		shared_ptr<CategoriesPage*> cateroriesPage = make_shared<CategoriesPage*>();
 		options.push_back(*cateroriesPage);
-		shared_ptr<OrderHistoryPage*> orderHistoryPage = make_shared<OrderHistoryPage*>(account);
-		options.push_back(*orderHistoryPage);
-		shared_ptr<FavoritesPage*> favoritesPage = make_shared<FavoritesPage*>(account);
-		options.push_back(*favoritesPage);
-		shared_ptr<AccountInfoPage*> accountInfoPage = make_shared<AccountInfoPage*>(account);
-		options.push_back(*accountInfoPage);
+		shared_ptr<orderHistoryPage*> OrderHistoryPage = make_shared<orderHistoryPage*>(account);
+		options.push_back(*OrderHistoryPage);
+		shared_ptr<favoritesPage*> FavoritesPage = make_shared<favoritesPage*>(account);
+		options.push_back(*FavoritesPage);
+		shared_ptr<accountInfoPage*> AccountInfoPage = make_shared<accountInfoPage*>(account);
+		options.push_back(*AccountInfoPage);
 	}
 	void print() override {
 		int input;
@@ -348,9 +348,9 @@ private:
 };
 
 //구현 했으나 연결 안함.
-class SearchPage :public Page {
+class searchPage :public Page {
 public:
-	SearchPage() {};
+	searchPage() {};
 	void print() override {
 		string input;
 		do {
@@ -448,9 +448,9 @@ private:
 	string name;
 };
 
-class OrderHistoryPage :public Page {
+class orderHistoryPage :public Page {
 public:
-	OrderHistoryPage(Account* account) :account(account) {};
+	orderHistoryPage(Account* account) :account(account) {};
 	void print() override {
 		system("cls");
 		cout << getName() << endl << endl;
@@ -477,9 +477,9 @@ private:
 	string name = "My Order History";
 };
 
-class FavoritesPage :public Page {
+class favoritesPage :public Page {
 public:
-	FavoritesPage(Account* account) :account(account) {};
+	favoritesPage(Account* account) :account(account) {};
 	void print() override {
 		system("cls");
 		cout << getName() << endl << endl;
@@ -506,9 +506,9 @@ private:
 	string name = "My Favorites";
 };
 
-class AccountInfoPage :public Page {
+class accountInfoPage :public Page {
 public:
-	AccountInfoPage(Account* account) :account(account) {};
+	accountInfoPage(Account* account) :account(account) {};
 	void print() override {
 		system("cls");
 		cout << getName() << endl << endl;

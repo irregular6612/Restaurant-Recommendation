@@ -1,12 +1,12 @@
-#include "fileHandler.hpp"
+#include "FileHandler.hpp"
 #include"Account.hpp"
 
 int main(int argc, char* argv[]){
-    std::string DB_path = "dataset/DB_accounts.txt"; 
-    fileHandler file(DB_path);
+    std::string dbPath = "dataset/db_accounts.txt"; 
+    FileHandler file(dbPath);
 
     /*
-    AccountManager AccountList;
+    AccountStorage AccountList;
     while(file.readLine()){
         file.readToken();
         std::string type = file.getToken();
