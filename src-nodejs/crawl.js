@@ -3,14 +3,14 @@ const axios = require("axios");
 const fs = require("fs");
 const { type } = require("os");
 
-const DB = "./dataset/DB.txt";
+const db = "./dataset/db.txt";
 
 let menuUrl = (menu) => {
   return `https://map.naver.com/p/api/search/allSearch?query=${menu}&type=all&searchCoord=126.842362%3B35.219526&boundary=`;
 };
 
-fs.writeFileSync(DB, "", (err) => console.log(err));
-//fs.appendFileSync(DB, url2, (err) => console.log(err));
+fs.writeFileSync(db, "", (err) => console.log(err));
+//fs.appendFileSync(db, url2, (err) => console.log(err));
 const crawlData = async (menu) => {
   try {
     const headers = {
@@ -22,11 +22,11 @@ const crawlData = async (menu) => {
       headers: headers1,
     });
     //console.log(response.data);
-    const storeList = response.data.result.place.list;
-    console.log(storeList[1]);
+    const storeVector = response.data.result.place.list;
+    console.log(storeVector[1]);
     //console.log(response.data.result.place.list[0]);
 
-    for (storeInfo in storeList) {
+    for (storeInfo in storeVector) {
       const hasMenu = response.data.result.place.list[storeInfo].menuExist;
 
       if (hasMenu === "1") {
@@ -65,12 +65,12 @@ const crawlData = async (menu) => {
           //*/
         });
 
-        //fs.appendFileSync(DB, storeIndex + "번\t", (err) => console.log(err));
-        fs.appendFileSync(DB, storeName + "\t", (err) => console.log(err));
-        fs.appendFileSync(DB, storeCategory + "\n", (err) => console.log(err));
-        fs.appendFileSync(DB, storeTel + "\t", (err) => console.log(err));
-        fs.appendFileSync(DB, reviewCount + "\n", (err) => console.log(err));
-        fs.appendFileSync(DB, storeMenuInfo + "\n\n", (err) =>
+        //fs.appendFileSync(db, storeIndex + "번\t", (err) => console.log(err));
+        fs.appendFileSync(db, storeName + "\t", (err) => console.log(err));
+        fs.appendFileSync(db, storeCategory + "\n", (err) => console.log(err));
+        fs.appendFileSync(db, storeTel + "\t", (err) => console.log(err));
+        fs.appendFileSync(db, reviewCount + "\n", (err) => console.log(err));
+        fs.appendFileSync(db, storeMenuInfo + "\n\n", (err) =>
           console.log(err)
         );
       }

@@ -63,7 +63,7 @@
 											"top": 38,
 											"width": 327,
 											"height": 13,
-											"text": "fileHandler.h"
+											"text": "FileHandler.h"
 										},
 										{
 											"_type": "LabelView",
@@ -170,7 +170,7 @@
 											"top": 63,
 											"width": 285.69873046875,
 											"height": 13,
-											"text": "fileHandler"
+											"text": "FileHandler"
 										},
 										{
 											"_type": "LabelView",
@@ -184,7 +184,7 @@
 											"top": -96,
 											"width": 113.18505859375,
 											"height": 13,
-											"text": "(from fileHandler.h)"
+											"text": "(from FileHandler.h)"
 										},
 										{
 											"_type": "LabelView",
@@ -412,7 +412,7 @@
 											"top": 229,
 											"width": 285.69873046875,
 											"height": 13,
-											"text": "«constructor»+fileHandler(argc: int, argv: char**)",
+											"text": "«constructor»+FileHandler(argc: int, argv: char**)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1529,7 +1529,7 @@
 											"top": 1071,
 											"width": 318.50341796875,
 											"height": 13,
-											"text": "storeVector"
+											"text": "StoreVector"
 										},
 										{
 											"_type": "LabelView",
@@ -1635,7 +1635,7 @@
 											"top": 1117,
 											"width": 318.50341796875,
 											"height": 13,
-											"text": "«constructor»+storeVector()",
+											"text": "«constructor»+StoreVector()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3174,7 +3174,7 @@
 											"top": 239,
 											"width": 303.39599609375,
 											"height": 13,
-											"text": "SignUpPage"
+											"text": "signUpPage"
 										},
 										{
 											"_type": "LabelView",
@@ -3297,7 +3297,7 @@
 											"top": 300,
 											"width": 303.39599609375,
 											"height": 13,
-											"text": "«constructor»+SignUpPage()",
+											"text": "«constructor»+signUpPage()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3822,7 +3822,7 @@
 											"top": 239,
 											"width": 223.1806640625,
 											"height": 13,
-											"text": "SignInPage"
+											"text": "signInPage"
 										},
 										{
 											"_type": "LabelView",
@@ -3979,7 +3979,7 @@
 											"top": 330,
 											"width": 223.1806640625,
 											"height": 13,
-											"text": "«constructor»+SignInPage()",
+											"text": "«constructor»+signInPage()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4614,7 +4614,7 @@
 											"top": 767,
 											"width": 197.8916015625,
 											"height": 13,
-											"text": "ModifyRestaurant"
+											"text": "modifyRestaurantPage"
 										},
 										{
 											"_type": "LabelView",
@@ -4737,7 +4737,7 @@
 											"top": 828,
 											"width": 197.8916015625,
 											"height": 13,
-											"text": "«constructor»+ModifyRestaurant()",
+											"text": "«constructor»+modifyRestaurantPage()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -5355,7 +5355,7 @@
 											"top": 1255,
 											"width": 167.5625,
 											"height": 13,
-											"text": "SearchPage"
+											"text": "searchPage"
 										},
 										{
 											"_type": "LabelView",
@@ -5461,7 +5461,7 @@
 											"top": 1301,
 											"width": 167.5625,
 											"height": 13,
-											"text": "«constructor»+SearchPage()",
+											"text": "«constructor»+searchPage()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -6424,7 +6424,7 @@
 											"top": 1255,
 											"width": 304.8369140625,
 											"height": 13,
-											"text": "OrderHistoryPage"
+											"text": "orderHistoryPage"
 										},
 										{
 											"_type": "LabelView",
@@ -6547,7 +6547,7 @@
 											"top": 1316,
 											"width": 304.8369140625,
 											"height": 13,
-											"text": "«constructor»+OrderHistoryPage(account: Account*)",
+											"text": "«constructor»+orderHistoryPage(account: Account*)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -6786,7 +6786,7 @@
 											"top": 1255,
 											"width": 284.61962890625,
 											"height": 13,
-											"text": "FavoritesPage"
+											"text": "favoritesPage"
 										},
 										{
 											"_type": "LabelView",
@@ -6909,7 +6909,7 @@
 											"top": 1316,
 											"width": 284.61962890625,
 											"height": 13,
-											"text": "«constructor»+FavoritesPage(account: Account*)",
+											"text": "«constructor»+favoritesPage(account: Account*)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -7148,7 +7148,7 @@
 											"top": 1255,
 											"width": 299.81591796875,
 											"height": 13,
-											"text": "AccountInfoPage"
+											"text": "accountInfoPage"
 										},
 										{
 											"_type": "LabelView",
@@ -7254,7 +7254,7 @@
 											"top": 1301,
 											"width": 299.81591796875,
 											"height": 13,
-											"text": "«constructor»+AccountInfoPage(account: Account*)",
+											"text": "«constructor»+accountInfoPage(account: Account*)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -10724,7 +10724,7 @@
 										"$ref": "AAAAAAGPtO0GKMYG+K0="
 									},
 									"model": {
-										"$ref": "AAAAAAGPtO0GKMYDBOI="
+										"$ref": "AAAAAAGPtO0GKMYdbOI="
 									},
 									"visible": false,
 									"font": "Arial;13;0",
@@ -10745,7 +10745,7 @@
 										"$ref": "AAAAAAGPtO0GKMYG+K0="
 									},
 									"model": {
-										"$ref": "AAAAAAGPtO0GKMYDBOI="
+										"$ref": "AAAAAAGPtO0GKMYdbOI="
 									},
 									"visible": false,
 									"font": "Arial;13;0",
@@ -10766,7 +10766,7 @@
 										"$ref": "AAAAAAGPtO0GKMYG+K0="
 									},
 									"model": {
-										"$ref": "AAAAAAGPtO0GKMYDBOI="
+										"$ref": "AAAAAAGPtO0GKMYdbOI="
 									},
 									"visible": false,
 									"font": "Arial;13;0",
@@ -10847,7 +10847,7 @@
 										"$ref": "AAAAAAGPtO0GKMYG+K0="
 									},
 									"model": {
-										"$ref": "AAAAAAGPtO0GKMYDBOI="
+										"$ref": "AAAAAAGPtO0GKMYdbOI="
 									},
 									"visible": false,
 									"font": "Arial;13;0",
@@ -11406,7 +11406,7 @@
 								},
 								{
 									"_type": "UMLQualifierCompartmentView",
-									"_id": "AAAAAAGPtO3ODBbiABo=",
+									"_id": "AAAAAAGPtO3OdbbiABo=",
 									"_parent": {
 										"$ref": "AAAAAAGPtO3OCxbXOSI="
 									},
@@ -11463,7 +11463,7 @@
 								"$ref": "AAAAAAGPtO3OCxbhT7U="
 							},
 							"headQualifiersCompartment": {
-								"$ref": "AAAAAAGPtO3ODBbiABo="
+								"$ref": "AAAAAAGPtO3OdbbiABo="
 							}
 						},
 						{
@@ -13110,7 +13110,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "fileHandler.h",
+					"name": "FileHandler.h",
 					"ownedElements": [
 						{
 							"_type": "UMLClass",
@@ -13118,7 +13118,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPlYcV+kk5mbA="
 							},
-							"name": "fileHandler",
+							"name": "FileHandler",
 							"attributes": [
 								{
 									"_type": "UMLAttribute",
@@ -13218,7 +13218,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPlYe4h0lXz0w="
 									},
-									"name": "fileHandler",
+									"name": "FileHandler",
 									"stereotype": "constructor",
 									"parameters": [
 										{
@@ -13947,7 +13947,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPlZLKukoTO+Y="
 							},
-							"name": "storeVector",
+							"name": "StoreVector",
 							"ownedElements": [
 								{
 									"_type": "UMLAssociation",
@@ -13996,7 +13996,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtH4XvttsZwk="
 									},
-									"name": "storeVector",
+									"name": "StoreVector",
 									"stereotype": "constructor"
 								},
 								{
@@ -14437,7 +14437,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "SignUpPage",
+							"name": "signUpPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -14566,7 +14566,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtNUcsnd0OUM="
 									},
-									"name": "SignUpPage",
+									"name": "signUpPage",
 									"stereotype": "constructor"
 								},
 								{
@@ -14811,7 +14811,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "SignInPage",
+							"name": "signInPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -14960,7 +14960,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtNc+doTkQIc="
 									},
-									"name": "SignInPage",
+									"name": "signInPage",
 									"stereotype": "constructor"
 								},
 								{
@@ -15125,7 +15125,7 @@
 									},
 									"end1": {
 										"_type": "UMLAssociationEnd",
-										"_id": "AAAAAAGPtO0GKMYDBOI=",
+										"_id": "AAAAAAGPtO0GKMYdbOI=",
 										"_parent": {
 											"$ref": "AAAAAAGPtO0GKMYCWLg="
 										},
@@ -15245,7 +15245,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "ModifyRestaurant",
+							"name": "modifyRestaurantPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -15318,7 +15318,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtNpxfpEF+6o="
 									},
-									"name": "ModifyRestaurant",
+									"name": "modifyRestaurantPage",
 									"stereotype": "constructor"
 								},
 								{
@@ -15678,7 +15678,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "SearchPage",
+							"name": "searchPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -15713,7 +15713,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtNzNKZ5D4Co="
 									},
-									"name": "SearchPage",
+									"name": "searchPage",
 									"stereotype": "constructor"
 								},
 								{
@@ -16017,7 +16017,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "OrderHistoryPage",
+							"name": "orderHistoryPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -16090,7 +16090,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtOB+2bGbckI="
 									},
-									"name": "OrderHistoryPage",
+									"name": "orderHistoryPage",
 									"stereotype": "constructor",
 									"parameters": [
 										{
@@ -16150,7 +16150,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "FavoritesPage",
+							"name": "favoritesPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -16223,7 +16223,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtOGOyrZjQyM="
 									},
-									"name": "FavoritesPage",
+									"name": "favoritesPage",
 									"stereotype": "constructor",
 									"parameters": [
 										{
@@ -16283,7 +16283,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGPtLkiEBy3GZs="
 							},
-							"name": "AccountInfoPage",
+							"name": "accountInfoPage",
 							"ownedElements": [
 								{
 									"_type": "UMLGeneralization",
@@ -16346,7 +16346,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGPtOJy/bvsKYg="
 									},
-									"name": "AccountInfoPage",
+									"name": "accountInfoPage",
 									"stereotype": "constructor",
 									"parameters": [
 										{
@@ -16408,7 +16408,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "SignUpPage",
+					"name": "signUpPage",
 					"ownedElements": [
 						{
 							"_type": "UMLGeneralization",
