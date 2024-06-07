@@ -1,6 +1,7 @@
 #include <vector>
 #include <functional>
 #include "account.hpp"
+#include <iomanip>
 
 //command가 굳이 필요한가...?
 class Command {
@@ -37,7 +38,7 @@ public:
         int selection = 0;
         do {
             system("clear");
-            std::cout << "Menu:" << pageName << std::endl << std::endl;
+            std::cout << "Menu: " << pageName << std::endl << std::endl;
             for (int i = 0; i < menuList.size(); i++) {
                 std::cout << i + 1 << ". " << menuList[i]->getName() << std::endl;
             }
@@ -97,3 +98,6 @@ public:
         }
     }
 };
+
+//----------------------------------------------------------
+

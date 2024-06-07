@@ -37,8 +37,8 @@ public:
             menuPriceVal = std::stoi(menuPrice.substr(0, indexOfComma) + menuPrice.substr(indexOfComma + 1));
         }
         catch (const std::exception& e) {
+            //if there not exists the price information, set val -1.
             menuPriceVal = -1;
-            //std::cerr << e.what() << '\n';
         }
     }
 };
@@ -133,38 +133,23 @@ public:
 
 class StoreVector {
 private:
-    enum SortStd { DEFAULT, PRICE, STARS };
+    enum SortStd { DEFAULT, PRICE, REVIEW };
     SortStd sortStd;
     std::string menuInput;
     std::string storeInput;
     std::vector<MenuVector*> stores;
-    bool compareDefault(MenuVector* a, MenuVector* b) { return true; }
-    bool comparePrice(MenuVector* a, MenuVector* b) {
-        return (a->getMenu(menuInput)->getMenuPriceValue()) >= (b->getMenu(menuInput)->getMenuPriceValue()) ? true : false;
-    }
-    bool compareReview(MenuVector* a, MenuVector* b) {
-        return (a->getReviewVal()) >= (b->getReviewVal()) ? true : false;
-    }
 public:
     StoreVector() : sortStd(DEFAULT) {}
     ~StoreVector() {}
     void setOrder(int x) { sortStd = static_cast<SortStd>(x); }
     int getOrder() const { return static_cast<int>(sortStd); }
-
-
-    std::vector<MenuVector*> findStoreWithMenu(std::string menuQuery, int x = 0) {
-        setOrder(static_cast<SortStd>(x));
-        //cant const since below line.
-        menuInput = menuQuery;
+    std::vector<MenuVector*> sort(std::string menuQuery) {
         std::vector<MenuVector*> targetStore;
 
         for (MenuVector* store : stores) {
             if (store->hasMenu(menuQuery)) {
-                //
-                if (sortStd == DEFAULT || targetStore.size() == 0) {
+                if (targetStore.size() == 0) {
                     targetStore.push_back(store);
-                //가격 정렬 수정 필요.......................................................................
-                //가격이 싼게 앞으로 -> idx가 증가하는데, 언제까지? -> 
                 }
                 else if (sortStd == PRICE) {
                     for (int i = 0; i != targetStore.size(); i++) {
@@ -174,7 +159,7 @@ public:
                         }
                     }
                 }
-                else {  //sort order with review count.
+                else if (sortStd == REVIEW) {  //sort order with review count.
                     for (int i = 0; i != targetStore.size(); i++) {
                         if (store->getReviewVal() > targetStore[i]->getReviewVal()) {
                             targetStore.insert(targetStore.begin() + i, store);
@@ -182,13 +167,19 @@ public:
                         }
                     }
                 }
-                //targetStore.push_back(store);
+                else {  //DEFAULT
+                    targetStore.push_back(store);
+                }
             }
         }
         return targetStore;
     }
+    std::vector<MenuVector*> findStoreWithMenu(std::string menuQuery, int x = 0) {
+        setOrder(static_cast<SortStd>(x));
+        menuInput = menuQuery;
+        return sort(menuQuery);
+    }
     std::vector<MenuVector*> findStoreWithName(std::string storeName) {
-        //cant const since below line.
         std::vector<MenuVector*> targetStore;
         storeInput = storeName;
         for (MenuVector* store : stores) {
@@ -196,9 +187,19 @@ public:
                 targetStore.push_back(store);
             }
         }
-        return targetStore;
-        
+        return targetStore; 
     }
+    std::vector<MenuVector*> findStoreWithCategory(std::string storeCategory) {
+        std::vector<MenuVector*> targetStore;
+        storeInput = storeCategory;
+        for (MenuVector* store : stores) {
+            if (store->getCategory().find(storeCategory) != std::string::npos) {
+                targetStore.push_back(store);
+            }
+        }
+        return targetStore; 
+    }
+
     void insertStore(MenuVector* s) {
         if (findStoreWithName(s->getName()).empty()) {
             stores.push_back(s);
