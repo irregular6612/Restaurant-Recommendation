@@ -375,7 +375,7 @@ public:
             for (int i = pageNum * pageStoreNum; (i < (pageNum + 1) * pageStoreNum ) && i < totalStoreNum ; i++){
                 std::cout << i + 1 << "번째";
                 std::cout << "[" << targetStoreVector[i]->getName() << "]\t 추천수:" << targetStoreVector[i]->getReview() << std::endl;
-                if(targetStoreVector[i] -> getDiscount() ){
+                if(targetStoreVector[i] -> getDiscount() > 10 ){
                     std::cout << "Event !!!!    Discount : " << targetStoreVector[i] -> getDiscount() << "%" << std::endl;
                 }
                 std::cout << std::endl;
@@ -557,9 +557,19 @@ private:
     FileHandler& db;
     StoreVector& storeVector;
     StoreModifier& storeModifier;
+    AccountStorage& accountStorage;
 public:
-    ModifyRestaurantPage(FileHandler& db, StoreVector& storeVector, StoreModifier& storeModifier): db(db), storeVector(storeVector), storeModifier(storeModifier) {}
+    ModifyRestaurantPage(FileHandler& db, StoreVector& storeVector, StoreModifier& storeModifier, AccountStorage& accountStorage): db(db), storeVector(storeVector), storeModifier(storeModifier), accountStorage(accountStorage) {}
     bool action() {
+
+        if(accountStorage.getAccount()->getAccountType() == USER){
+            std::cout << "Access denied.." << std::endl;
+            std::cout << "press any to go back" << std::endl;
+            std::cin.get();
+            std::cin.ignore();
+            return false;
+        }
+
         std::vector<MenuVector*> targetStoreList;
         std::string input;
         std::cout << "Input restaurant's name to find(0 to exit): ";
@@ -740,7 +750,7 @@ int main() {
     FunctionalPage orderHistoryPage("Order History Page", new OrderHistoryPage(dbOrderHistory, accountStorage));
     FunctionalPage favoritesPage("Favorites Page", new FavoritesPage(dbFavorites, accountStorage));
     FunctionalPage accountInfoPage("AccountInfo Page",new AccountInfoPage(dbAccount, accountStorage, accountModifier));
-    FunctionalPage modifyRestaurantPage("Modify Restaurant Page",new ModifyRestaurantPage(db, storeVector, storeModifier));
+    FunctionalPage modifyRestaurantPage("Modify Restaurant Page",new ModifyRestaurantPage(db, storeVector, storeModifier, accountStorage));
     //newPage
     FunctionalPage discountInfoPage("Discount InfoPage",new DiscountInfoPage(storeVector));
 
