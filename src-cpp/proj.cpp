@@ -1,53 +1,13 @@
 #include "FileHandler.hpp"
 #include"Account.hpp"
+#include<cstdlib>
+#include<ctime>
 
 int main(int argc, char* argv[]){
-    std::string dbPath = "dataset/db_accounts.txt"; 
-    FileHandler file(dbPath);
+    srand(time(0));
+    int virtualDiscountRate = (rand()%5)*5;
 
-    /*
-    AccountStorage AccountList;
-    while(file.readLine()){
-        file.readToken();
-        std::string type = file.getToken();
-        file.readToken();
-        std::string id = file.getToken();
-        file.readToken();
-        std::string pw = file.getToken();
+    std::cout << "random2 : " <<  virtualDiscountRate << std::endl;
 
-        //std::cout << type << " " << id << " " << pw << std::endl;
-
-        if(!type.compare("ADMIN")){
-            AccountList.addAccount(new Account(ADMIN, id, pw));
-        }else{
-            AccountList.addAccount(new Account(USER, id, pw));
-        }
-    }
-    file.moveFront();
-    while (file.readLine()){
-        std::cout << "work!" << std::endl;
-        file.readToken();
-        std::string type = file.getToken();
-        file.readToken();
-        std::string id = file.getToken();
-        file.readToken();
-        std::string pw = file.getToken();
-
-        std::cout << type << " " << id << " " << pw << std::endl;
-    }
-    file.clear();
-    int i=0;
-    file.writeToken("ADMIN\tadmin\tadmin\nUSER\tuser\tuser");
-    */
-
-    std::string s = "asfa";
-    s = s.substr(0,s.size());
-    std::cout << s << std::endl;
-    
-    
     return 0;
 }
-
-
-//정렬 기준: 가격, 별점, default 순서
-//가격이 없는 거는 지우자.

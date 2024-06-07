@@ -4,12 +4,13 @@
 #include "fileHandler.hpp"
 #include "storeVector.hpp"
 #include "stringK.hpp"
+#include <ctime>
+#include <cstdlib>
 
 // if you want to debug, it is useful to set DEBUG 101
-#define DEBUG 0
+#define DEBUG 101
 //if you are using MAC set 000 or window set 111
 #define OS 000
-
 
 //g++ -std=c++20 -stdlib=libc++ $fileName -o $fileNameWithoutExt
 
@@ -52,6 +53,12 @@ public:
         store->setTel(db.getToken());  //set tel.
         db.readToken(); //read reviewCount
         store->setReview(db.getToken());  //set reviewCount.
+
+        //since we can't get discount info, instead we take random
+        srand(time(NULL));
+        int virtualDiscountRate = (rand()%5)*5;
+        store->setDiscount(virtualDiscountRate);
+        //store->setDiscount(virtualDiscountRate);
         return store;
     }
     void formatData(FileHandler& db, StoreVector& storeVector) {
@@ -110,8 +117,10 @@ public:
                 newline = db.getLine();
                 //replace the name and price
                 targetString = oldStore -> getMenu(0) -> getMenuName();
-                stringPos = db.getToken().find(targetString);
-                
+                stringPos = db.getLine().find(targetString);
+
+                std::cout << targetString << std::endl;
+                //메뉴가 1개인 가게는 기호가 없다.
                 newline.replace(stringPos, newline.find('|',stringPos) - stringPos, newMenu.getMenuName() +" "+  newMenu.getMenuPrice());
                 temp.writeToken(newline);
             }
@@ -235,10 +244,7 @@ public:
 //every function keep its page by using cin.
 //if user gives any input w/o \n, -> terminate current page and return false.
 
-class ActionPage {
-public:
-    virtual bool action() = 0;
-};
+
 
 class SignInPage : public ActionPage {
 private:
@@ -251,7 +257,6 @@ public:
         accountModifier.formatData(db, accountStorage);
         std::string id, pw;
 
-        std::cout << "This is Sign In page...." << std::endl << std::endl;
         std::cout << "Input the ID.." << std::endl;
         #if DEBUG == 101
             id = "admin";
@@ -287,7 +292,6 @@ public:
     //여기에서 생성.
     SignUpPage(FileHandler& db, AccountStorage& accountStorage, AccountModifier& accountModifier) :db(db), accountStorage(accountStorage), accountModifier(accountModifier) {}
     bool action(){
-        std::cout << "This is Sign Up page...." << std::endl;
         accountModifier.formatData(db, accountStorage);
         std::string id, pw;
         std::string state = "1";
@@ -335,68 +339,8 @@ public:
 
 //user main menus
 
-class SearchPage : public ActionPage {
-private:
-    StoreModifier& storeModifier;
-    StoreVector& storeVector;
-    FileHandler& db;
+class StoreActionPage : public ActionPage{
 public:
-    SearchPage(FileHandler& db, StoreVector& storeVector, StoreModifier& storeModifier) : db(db), storeVector(storeVector), storeModifier(storeModifier) {}
-    bool action(){
-
-        //dataset part....
-        storeModifier.formatData(db, storeVector);
-        std::cout << "This is Search page...." << std::endl;
-	
-        std::string inputMenu;
-        #if DEBUG == 101
-            inputMenu = "1";
-        #endif
-        std::cout << "Search(0 to exit): 1-storeName, 2-menuName"; 
-        std::cin >> inputMenu;
-
-        if (!inputMenu.compare("0")) {    //exit.
-            return false;
-        }
-        else if (!inputMenu.compare("1")) {
-            std::cout << "Store? :";
-            std::cin >> inputMenu;
-            std::cout << std::endl;
-            int i = 1;
-            for (MenuVector* store : storeVector.findStoreWithName(inputMenu)) {
-                std::cout << i << "번째";
-                i++;
-                std::cout << "[" << store->getName() << "]\t 추천수:" << store->getReview() << std::endl;
-                std::cout << "카테고리 : " << store->getCategory() <<std::endl;
-                printAllMenus(store,inputMenu);
-                std::cout << std::endl;
-            }
-            
-        }
-        else if (!inputMenu.compare("2")) {
-            std::cout << "Menu? :";
-            std::cin >> inputMenu;
-            std::cout << "Sort? 0: default, 1: price, 2: review : ";
-            int orderinput;
-            std::cin >> orderinput;
-    
-            int i = 1;
-            for (MenuVector* store : storeVector.findStoreWithMenu(inputMenu, orderinput)) {
-                std::cout << i << "번째";
-                i++;
-                std::cout << "[" << store->getName() << "]\t 추천수:" << store->getReview() << std::endl;
-                std::cout << "카테고리 : " << store->getCategory() <<std::endl;
-                printAllMenus(store,inputMenu);
-                std::cout << std::endl;
-            }
-        }
-
-        //for delay
-        std::cin.get();
-        std::cin.ignore();
-        return false;
-        }
-    
     void printAllMenus(MenuVector* store, std::string& inputMenu) const{
         for (Menu* menu : store->allMenu()) {
             std::cout << "- ";
@@ -412,10 +356,101 @@ public:
             else {
                 std::cout << std::endl;
                 
-        }
-        //std::cout << std::endl;
+            }
         }
     }
+    void showMenuList(bool& endState, std::vector<MenuVector*> targetStoreVector, std::string& title){
+        int pageNum = 0;
+        std::string input;
+        int totalStoreNum = targetStoreVector.size();
+        while(endState == false){
+            system("clear");
+            const int pageStoreNum = 10;
+            
+            std::cout << "[" << title << "]" << std::endl;
+            std::cout << "Total Stores: " << totalStoreNum << std::endl;
+            int maxPageNum = (totalStoreNum % pageStoreNum) ? (totalStoreNum / pageStoreNum + 1) : (totalStoreNum / pageStoreNum);
+            std::cout << "current pageNum:" << pageNum + 1 << "/" << maxPageNum << std::endl << std::endl;
+
+            for (int i = pageNum * pageStoreNum; (i < (pageNum + 1) * pageStoreNum ) && i < totalStoreNum ; i++){
+                std::cout << i + 1 << "번째";
+                std::cout << "[" << targetStoreVector[i]->getName() << "]\t 추천수:" << targetStoreVector[i]->getReview() << std::endl;
+                if(targetStoreVector[i] -> getDiscount() ){
+                    std::cout << "Event !!!!    Discount : " << targetStoreVector[i] -> getDiscount() << "%" << std::endl;
+                }
+                std::cout << std::endl;
+                printAllMenus(targetStoreVector[i],title);
+                std::cout << std::endl;
+            }
+            std::cout << "press 1 to next or press -1 to back" << std::endl;                
+            std::cout << "press 0 to exit" << std::endl;
+            std::cout << "select: ";
+            std::cin >> input;
+
+            if(!input.compare("1")){
+                if (pageNum <= (totalStoreNum/pageStoreNum + 1)) {
+                    pageNum++;
+                }else{
+                    std::cout << "no next page..." << std::endl;
+                    std::cin.get();
+                    std::cin.ignore();
+                }
+            }else if(!input.compare("-1")){
+                if(pageNum == 0){
+                    std::cout << "no back page..." << std::endl;
+                    std::cin.get();
+                    std::cin.ignore();
+                }else{
+                    pageNum--;
+                }
+            }else{
+                endState = true;
+            }
+        }
+    }
+};
+
+
+class SearchPage : public StoreActionPage {
+private:
+    StoreModifier& storeModifier;
+    StoreVector& storeVector;
+    FileHandler& db;
+public:
+    SearchPage(FileHandler& db, StoreVector& storeVector, StoreModifier& storeModifier) : db(db), storeVector(storeVector), storeModifier(storeModifier) {}
+    bool action(){
+        bool endState = false;
+        std::string inputMenu;
+        #if DEBUG == 101
+            inputMenu = "1";
+        #endif
+        std::cout << "Search(0 to exit): 1-storeName, 2-menuName"; 
+        std::cin >> inputMenu;
+
+        if (!inputMenu.compare("0")) {    //exit.
+            return false;
+        }
+        else if (!inputMenu.compare("1")) {
+            std::cout << "Store? :";
+            std::cin >> inputMenu;
+            std::cout << std::endl;
+            int i = 1;
+            showMenuList(endState,storeVector.findStoreWithName(inputMenu),inputMenu);
+        }
+        else if (!inputMenu.compare("2")) {
+            std::cout << "Menu? :";
+            std::cin >> inputMenu;
+            std::cout << "Sort? 0: default, 1: price, 2: review : ";
+            int orderinput;
+            std::cin >> orderinput;
+            showMenuList(endState, storeVector.findStoreWithMenu(inputMenu, orderinput), inputMenu);
+        }
+
+        //for delay
+        std::cin.get();
+        std::cin.ignore();
+        return false;
+        }
 };
 
 class OrderHistoryPage : public ActionPage {
@@ -427,7 +462,6 @@ public:
     OrderHistoryPage(FileHandler& db, AccountStorage& accountStorage) :db(db), accountStorage(accountStorage) {}
     bool action() {
         id = accountStorage.getAccount()->getId();
-        std::cout << "This is order history page...." << std::endl;
         db.moveFront();
         while (db.readLine()) {
             db.readToken();
@@ -462,7 +496,6 @@ public:
     FavoritesPage(FileHandler& db, AccountStorage& accountStorage) :db(db), accountStorage(accountStorage) {}
     bool action() {
         id = accountStorage.getAccount()->getId();
-        std::cout << "This is favorite page...." << std::endl;
         db.moveFront();
         while (db.readLine()) {
             db.readToken();
@@ -482,17 +515,15 @@ public:
     }
 };
 
-//-> 이거 마저하면 됨..
+//-> 실질적으로는 printOnlyPage랑 같은 기능을 해야하기 때문에 return true를 주어 pass 했다.
 class CategoriesPage : public ActionPage {
 private:
 public:
     bool action() {
         std::string category;
-        std::cout << "This is category page...." << std::endl;
         return true;
     }
 };
-
 
 class AccountInfoPage : public ActionPage {
 private:
@@ -502,8 +533,6 @@ private:
 public:
     AccountInfoPage(FileHandler& db, AccountStorage& accountStorage, AccountModifier& accountModifier) :db(db), accountStorage(accountStorage), accountModifier(accountModifier) {}
     bool action() {
-        std::cout << "This is account info page...." << std::endl;
-
         accountModifier.formatData(db, accountStorage);
     
         if (accountStorage.getAccount()->getAccountType() == ADMIN) {
@@ -526,16 +555,13 @@ public:
 class ModifyRestaurantPage : public ActionPage {
 private:
     FileHandler& db;
-    StoreVector& storeList;
+    StoreVector& storeVector;
     StoreModifier& storeModifier;
 public:
-    ModifyRestaurantPage(FileHandler& db, StoreVector& storeList, StoreModifier& storeModifier): db(db), storeList(storeList), storeModifier(storeModifier) {}
+    ModifyRestaurantPage(FileHandler& db, StoreVector& storeVector, StoreModifier& storeModifier): db(db), storeVector(storeVector), storeModifier(storeModifier) {}
     bool action() {
-        std::cout << "This is restaurant modify page...." << std::endl;
-        std::string input;
-
         std::vector<MenuVector*> targetStoreList;
-
+        std::string input;
         std::cout << "Input restaurant's name to find(0 to exit): ";
         #if DEBUG == 101
             input = "가야돌솥밥";
@@ -545,7 +571,7 @@ public:
 
         if (input.compare("0")) {
             std::string restaurantName = input;
-            targetStoreList = storeList.findStoreWithName(restaurantName);
+            targetStoreList = storeVector.findStoreWithName(restaurantName);
 
             if (targetStoreList.empty()) { //store does not exist.
                 std::cout << "no store..." << std::endl;
@@ -584,6 +610,12 @@ public:
                 targetStore.setName(restaurantName);
                 std::string menuName;
                 std::string newPrice;
+
+                std::cout << "Change discount ?? current: " << targetStore.getDiscount();
+                std::cout << "new Discount : ";
+                int newDiscount;
+                std::cin >> newDiscount;
+                targetStore.setDiscount(newDiscount);
 
                 if (restaurantName.compare("0")) {
                    int i = 0;
@@ -635,11 +667,7 @@ public:
     }
 };
 
-
-//categories page menus -> concrete 하나로 통일한고 .
-// 파라미터로 string주면 ㅇㅋ.
-
-class CategoriesRestaurantsPage : public ActionPage {
+class CategoriesRestaurantsPage : public StoreActionPage {
 private:
     StoreVector& storeVector;
     std::string category;
@@ -647,40 +675,32 @@ public:
     CategoriesRestaurantsPage(StoreVector& storeVector, std::string category) :storeVector(storeVector), category(category) {}
     bool action() {
         //std::string input;
-        std::cout << "This is " << category << " page...." << std::endl;
-        int i=0;
-        for (MenuVector* store : storeVector.findStoreWithCategory(category)) {
-            std::cout << i << "번째";
-            i++;
-            std::cout << "[" << store->getName() << "]\t 추천수:" << store->getReview() << std::endl;
-            //std::cout << "카테고리 : " << store->getCategory() <<std::endl;
-            printAllMenus(store,category);
-            std::cout << std::endl;
-        }
-        std::cout << "press any to go back";
-        //for delay
-        std::cin.get();
-        std::cin.ignore();
+        std::vector<MenuVector*> targetStoreVector = storeVector.findStoreWithCategory(category);
+        bool endState = false; 
+        //pageStoreNum can't be zero -> line 
+        showMenuList(endState,targetStoreVector,category);
         return false;
     }
-    void printAllMenus(MenuVector* store, std::string& inputMenu) const{
-        for (Menu* menu : store->allMenu()) {
-            std::cout << "- ";
-            //한글이 cout에서 3배 크기를 차지한다. -> 초,중,종성으로 따로 저장하니.
-            StringK menuName(menu -> getMenuName());
-            int formatInterval = 70;
-            std::cout << std::left << menuName.getStr() << std::right << std::setw(formatInterval - menuName.size()) << "|";            
-            std::cout << std::right << std::setw(10) << menu->getMenuPrice();
+};
 
-            if (menu->getMenuName().find(inputMenu) != std::string::npos) {
-                std::cout << "  *" << std::endl;
-            }
-            else {
-                std::cout << std::endl;
-                
-        }
-        //std::cout << std::endl;
-        }
+class DiscountInfoPage : public StoreActionPage {
+private:
+    StoreVector& storeVector;
+public:
+    DiscountInfoPage(StoreVector& storeVector) :storeVector(storeVector) {}
+    bool action() {
+        std::string title = "Discount Info Page";
+        //DISCOUNT == 3
+        storeVector.setOrder(3);
+        std::string categories[8] = {"Korean", "Chinese", "Japanese", "Western","Fastfood","Boonsik","Dessert","etc"};
+
+        srand(time(0));
+        std::vector<MenuVector*> targetStoreVector = storeVector.findStoreWithCategory(categories[rand()%8]);
+        storeVector.setOrder(0);
+        bool endState = false; 
+        //pageStoreNum can't be zero -> line 
+        showMenuList(endState,targetStoreVector,title);
+        return false;
     }
 };
 
@@ -708,43 +728,47 @@ int main() {
 
     //Structure of Main Page
     PrintOnlyPage mainPage("Main Page");
-    FunctionalPage<ActionPage> signInPage("Sign In", new SignInPage(dbAccount, accountStorage, accountModifier));
-    FunctionalPage<ActionPage> signUpPage("Sign Up", new SignUpPage(dbAccount, accountStorage, accountModifier));
+    FunctionalPage signInPage("Sign In", new SignInPage(dbAccount, accountStorage, accountModifier));
+    FunctionalPage signUpPage("Sign Up", new SignUpPage(dbAccount, accountStorage, accountModifier));
     mainPage.addMenu(&signInPage);
     mainPage.addMenu(&signUpPage);
 
     //Sturucture of User Main Page.
     PrintOnlyPage userMainPage("User Main Page");
-    FunctionalPage<ActionPage> searchPage("SearchPage",new SearchPage(db, storeVector, storeModifier));
-    FunctionalPage<ActionPage> categoriesPage("CategoriesPage",new CategoriesPage);
-    FunctionalPage<ActionPage> orderHistoryPage("orderHistoryPage", new OrderHistoryPage(dbOrderHistory, accountStorage));
-    FunctionalPage<ActionPage> favoritesPage("favoritesPage", new FavoritesPage(dbFavorites, accountStorage));
-    FunctionalPage<ActionPage> accountInfoPage("accountInfoPage",new AccountInfoPage(dbAccount, accountStorage, accountModifier));
-    FunctionalPage<ActionPage> modifyRestaurantPage("Modify Restaurant",new ModifyRestaurantPage(db, storeVector, storeModifier));
+    FunctionalPage searchPage("Search Page",new SearchPage(db, storeVector, storeModifier));
+    FunctionalPage categoriesPage("Categories Page",new CategoriesPage);
+    FunctionalPage orderHistoryPage("Order History Page", new OrderHistoryPage(dbOrderHistory, accountStorage));
+    FunctionalPage favoritesPage("Favorites Page", new FavoritesPage(dbFavorites, accountStorage));
+    FunctionalPage accountInfoPage("AccountInfo Page",new AccountInfoPage(dbAccount, accountStorage, accountModifier));
+    FunctionalPage modifyRestaurantPage("Modify Restaurant Page",new ModifyRestaurantPage(db, storeVector, storeModifier));
+    //newPage
+    FunctionalPage discountInfoPage("Discount InfoPage",new DiscountInfoPage(storeVector));
+
     userMainPage.addMenu(&searchPage);
     userMainPage.addMenu(&categoriesPage);
     userMainPage.addMenu(&orderHistoryPage);
     userMainPage.addMenu(&favoritesPage);
     userMainPage.addMenu(&accountInfoPage);
     userMainPage.addMenu(&modifyRestaurantPage);
+    userMainPage.addMenu(&discountInfoPage);
 
     //Structure of Categories Page.
     PrintOnlyPage categoryStoresPage("Category's Stores Page");
-    FunctionalPage<ActionPage> koreanPage("Korean",new CategoriesRestaurantsPage(storeVector, "Korean"));
+    FunctionalPage koreanPage("Korean",new CategoriesRestaurantsPage(storeVector, "Korean"));
     categoryStoresPage.addMenu(&koreanPage);
-    FunctionalPage<ActionPage> chinesePage("Chinese",new CategoriesRestaurantsPage(storeVector, "Chinese"));
+    FunctionalPage chinesePage("Chinese",new CategoriesRestaurantsPage(storeVector, "Chinese"));
     categoryStoresPage.addMenu(&chinesePage);
-    FunctionalPage<ActionPage> japanesePage("Japanese",new CategoriesRestaurantsPage(storeVector, "Japanese"));
+    FunctionalPage japanesePage("Japanese",new CategoriesRestaurantsPage(storeVector, "Japanese"));
     categoryStoresPage.addMenu(&japanesePage);
-    FunctionalPage<ActionPage> westernPage("Western",new CategoriesRestaurantsPage(storeVector, "Western"));
+    FunctionalPage westernPage("Western",new CategoriesRestaurantsPage(storeVector, "Western"));
     categoryStoresPage.addMenu(&westernPage);
-    FunctionalPage<ActionPage> fastfoodPage("Fastfood",new CategoriesRestaurantsPage(storeVector, "Fastfood"));
+    FunctionalPage fastfoodPage("Fastfood",new CategoriesRestaurantsPage(storeVector, "Fastfood"));
     categoryStoresPage.addMenu(&fastfoodPage);
-    FunctionalPage<ActionPage> boonsikPage("Boonsik",new CategoriesRestaurantsPage(storeVector, "Boonsik"));
+    FunctionalPage boonsikPage("Boonsik",new CategoriesRestaurantsPage(storeVector, "Boonsik"));
     categoryStoresPage.addMenu(&boonsikPage);
-    FunctionalPage<ActionPage> dessertPage("Dessert",new CategoriesRestaurantsPage(storeVector, "Dessert"));
+    FunctionalPage dessertPage("Dessert",new CategoriesRestaurantsPage(storeVector, "Dessert"));
     categoryStoresPage.addMenu(&dessertPage);
-    FunctionalPage<ActionPage> etcPage("etc",new CategoriesRestaurantsPage(storeVector, "etc"));
+    FunctionalPage etcPage("etc",new CategoriesRestaurantsPage(storeVector, "etc"));
     categoryStoresPage.addMenu(&etcPage);
     
     //PageController such like browser
@@ -754,6 +778,7 @@ int main() {
     browser.addPageTemplate(&categoryStoresPage);
 
     //execute browser
+    storeModifier.formatData(db, storeVector);
     browser.addPage(&mainPage);
     browser.run();
 

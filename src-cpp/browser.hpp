@@ -1,3 +1,6 @@
+#ifndef BROWSER_H
+#define BROWSER_H
+
 #include <vector>
 #include <functional>
 #include "account.hpp"
@@ -11,14 +14,20 @@ public:
     virtual std::string getName() const = 0;
 };
 
-template <typename T>//템플릿에서 추상으로 
+
+class ActionPage {
+public:
+    virtual bool action() = 0;
+};
+
 class FunctionalPage : public Command { //conrete command
 private:
     std::string pageName;
-    T* action;
+    ActionPage* action;
 public:
-    FunctionalPage(const std::string& name, T* action) : pageName(name), action(action) {}
+    FunctionalPage(const std::string& name, ActionPage* action) : pageName(name), action(action) {}
     bool execute() override {
+        std::cout << "[ "<< pageName << " ]"<< std::endl << std::endl;
         return action->action();
     };
 
@@ -99,5 +108,4 @@ public:
     }
 };
 
-//----------------------------------------------------------
-
+#endif

@@ -44,24 +44,28 @@ public:
 };
 //----------------------------------------------------------------------------------------------------
 
-enum StoreCategory { KOREAN, CHINESE, JAPANESE, CAFE, ITALIAN, WESTERN, FASTFOOD, BOONSIK, ETC };
+enum StoreCategory { KOREAN, CHINESE, JAPANESE, CAFE, WESTERN, FASTFOOD, BOONSIK, ETC };
 
 class MenuVector {
 public:
     virtual std::string getName() const = 0;
-    virtual void setName(std::string) = 0;
     virtual std::string getTel() const = 0;
-    virtual void setTel(std::string newTel) = 0;
     virtual std::string getCategory() const = 0;
-    virtual void setCatergory(std::string newCategory) = 0;
     virtual std::string getReview() const = 0;
-    virtual void setReview(std::string review) = 0;
     virtual int getReviewVal() const = 0;
+    virtual int getDiscount() const = 0;
+    
+    virtual void setName(std::string name) = 0;
+    virtual void setTel(std::string newTel) = 0;    
+    virtual void setCatergory(std::string newCategory) = 0;
+    virtual void setReview(std::string review) = 0;
+    virtual void setDiscount(int discountRate) = 0;
+
+    virtual void addMenu(Menu* menu) = 0;
     virtual bool hasMenu(std::string menuQuery) const = 0;
     virtual Menu* getMenu(int index) const = 0;
     virtual Menu* getMenu(std::string menuQuery) const = 0;
     virtual std::vector<Menu*> allMenu()const = 0;
-    virtual void addMenu(Menu* menu) = 0;
 };
 
 class Store : public MenuVector {
@@ -72,17 +76,21 @@ private:
     std::string storeCategory;
     std::string storeReviewCount;
     int storeReviewVal;
+    int discountRate;
 public:
-    Store(std::string name) : storeName(name) {}
+    Store(std::string name) : storeName(name), storeReviewVal(0), discountRate(0) {}
     ~Store() {}
     void setName(std::string newName) override{ storeName = newName; }
-    std::string getName() const override { return storeName; }
     void setTel(std::string newTel) override { storeTel = newTel; }
-    std::string getTel() const override { return storeTel; }
     void setCatergory(std::string newCategory) override { storeCategory = newCategory; }
-    std::string getCategory() const override { return storeCategory; }
     void setReview(std::string review) override { storeReviewCount = review; formatReview(); }
+    void setDiscount(int discountRate) override { this -> discountRate = discountRate; }
+
+    std::string getName() const override { return storeName; }
+    std::string getTel() const override { return storeTel; }
+    std::string getCategory() const override { return storeCategory; }
     std::string getReview() const override { return storeReviewCount; }
+    int getDiscount() const override { return discountRate; }
     void formatReview() {
         try {
             storeReviewVal= std::stoi(storeReviewCount);
@@ -133,7 +141,7 @@ public:
 
 class StoreVector {
 private:
-    enum SortStd { DEFAULT, PRICE, REVIEW };
+    enum SortStd { DEFAULT, PRICE, REVIEW , DISCOUNT };
     SortStd sortStd;
     std::string menuInput;
     std::string storeInput;
@@ -144,6 +152,7 @@ public:
     void setOrder(int x) { sortStd = static_cast<SortStd>(x); }
     int getOrder() const { return static_cast<int>(sortStd); }
     std::vector<MenuVector*> sort(std::string menuQuery) {
+        
         std::vector<MenuVector*> targetStore;
 
         for (MenuVector* store : stores) {
@@ -162,6 +171,13 @@ public:
                 else if (sortStd == REVIEW) {  //sort order with review count.
                     for (int i = 0; i != targetStore.size(); i++) {
                         if (store->getReviewVal() > targetStore[i]->getReviewVal()) {
+                            targetStore.insert(targetStore.begin() + i, store);
+                            break;
+                        }
+                    }
+                }else if (sortStd == DISCOUNT) {
+                    for (int i = 0; i != targetStore.size(); i++) {
+                        if (store->getDiscount() > targetStore[i]->getDiscount()) {
                             targetStore.insert(targetStore.begin() + i, store);
                             break;
                         }
@@ -199,11 +215,13 @@ public:
         }
         return targetStore; 
     }
-
     void insertStore(MenuVector* s) {
         if (findStoreWithName(s->getName()).empty()) {
             stores.push_back(s);
         }
+    }
+    bool isReady(){
+        return !stores.empty();
     }
 };
 
