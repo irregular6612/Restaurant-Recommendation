@@ -1,0 +1,19 @@
+{
+  "name": "baeminrsv",
+  "version": "1.0.0",
+  "description": "baemin_recommandation system",
+  "main": "crawl.js",
+  "scripts": {
+    "test": "start"
+  },
+  "keywords": [
+    "baemin",
+    "recommandation",
+    "crawling"
+  ],
+  "author": "irregular6612",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8"
+  }
+}
